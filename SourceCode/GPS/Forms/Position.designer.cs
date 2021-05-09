@@ -9,7 +9,7 @@ namespace AgOpenGPS
     public partial class FormGPS
     {
         //very first fix to setup grid etc
-        public bool isFirstFixPositionSet = false, isGPSPositionInitialized = false, isFirstHeadingSet = false, 
+        public bool isFirstFixPositionSet = false, isGPSPositionInitialized = false, isFirstHeadingSet = false,
             isReverse = false, isSuperSlow = false;
         public double startGPSHeading = 0;
 
@@ -17,7 +17,7 @@ namespace AgOpenGPS
         public StringBuilder sbFix = new StringBuilder();
 
         // autosteer variables for sending serial
-        public Int16 guidanceLineDistanceOff, guidanceLineSteerAngle, distanceDisplayPivot , distanceDisplaySteer;
+        public Int16 guidanceLineDistanceOff, guidanceLineSteerAngle, distanceDisplayPivot, distanceDisplaySteer;
 
         //how many fix updates per sec
         public int fixUpdateHz = 5;
@@ -537,7 +537,7 @@ namespace AgOpenGPS
                 default:
                     break;
             }
-        
+
 
             #region AutoSteer
 
@@ -896,7 +896,7 @@ namespace AgOpenGPS
             //pick the slow moving side edge of tool
             double distance = tool.toolWidth * 0.5;
             if (distance > 3) distance = 3;
-            
+
             //whichever is less
             if (tool.toolFarLeftSpeed < tool.toolFarRightSpeed)
             {
@@ -918,7 +918,7 @@ namespace AgOpenGPS
             if (!curve.isOkToAddPoints && !curve.isOkToAddDesPoints) sectionTriggerStepDistance = sectionTriggerStepDistance + 0.2;
             else sectionTriggerStepDistance = 1.0;
 
-            if (ct.isContourBtnOn) sectionTriggerStepDistance =1;
+            if (ct.isContourBtnOn) sectionTriggerStepDistance = 1;
 
             //precalc the sin and cos of heading * -1
             sinSectionHeading = Math.Sin(-toolPos.heading);
@@ -941,7 +941,7 @@ namespace AgOpenGPS
                     //Right side
                     vec3 point = new vec3(
                         pivotAxlePos.easting + (Math.Sin(pivotAxlePos.heading - glm.PIBy2) * -bnd.createBndOffset),
-                        pivotAxlePos.northing + (Math.Cos(pivotAxlePos.heading - glm.PIBy2) * -bnd.createBndOffset), 
+                        pivotAxlePos.northing + (Math.Cos(pivotAxlePos.heading - glm.PIBy2) * -bnd.createBndOffset),
                         pivotAxlePos.heading);
                     bnd.bndBeingMadePts.Add(point);
                 }
@@ -952,7 +952,7 @@ namespace AgOpenGPS
                     //Right side
                     vec3 point = new vec3(
                         pivotAxlePos.easting + (Math.Sin(pivotAxlePos.heading - glm.PIBy2) * bnd.createBndOffset),
-                        pivotAxlePos.northing + (Math.Cos(pivotAxlePos.heading - glm.PIBy2) * bnd.createBndOffset), 
+                        pivotAxlePos.northing + (Math.Cos(pivotAxlePos.heading - glm.PIBy2) * bnd.createBndOffset),
                         pivotAxlePos.heading);
                     bnd.bndBeingMadePts.Add(point);
                 }
@@ -981,7 +981,7 @@ namespace AgOpenGPS
 
             if (curve.isOkToAddDesPoints)
             {
-                vec3 pt = new vec3(pivotAxlePos.easting, pivotAxlePos.northing, pivotAxlePos.heading);
+                vec3 pt = new vec3(pivotAxlePos.easting + Math.Cos(pivotAxlePos.heading) * tool.toolOffset, pivotAxlePos.northing - Math.Sin(pivotAxlePos.heading) * tool.toolOffset, pivotAxlePos.heading);
                 curve.desList.Add(pt);
             }
 
@@ -1048,7 +1048,7 @@ namespace AgOpenGPS
                 {
                     //only one first left point, the rest are all rights moved over to left
                     section[j].leftPoint = new vec3(cosHeading * (section[j].positionLeft) + easting,
-                                       sinHeading * (section[j].positionLeft) + northing,0);
+                                       sinHeading * (section[j].positionLeft) + northing, 0);
 
                     left = section[j].leftPoint - section[j].lastLeftPoint;
 
@@ -1056,7 +1056,7 @@ namespace AgOpenGPS
                     section[j].lastLeftPoint = section[j].leftPoint;
 
                     //get the speed for left side only once
-                    
+
                     leftSpeed = left.GetLength() / fixUpdateTime * 10;
                     if (leftSpeed > meterPerSecPerPixel) leftSpeed = meterPerSecPerPixel;
 
@@ -1069,13 +1069,13 @@ namespace AgOpenGPS
 
                     //save a copy for next time
                     section[j].lastLeftPoint = section[j].leftPoint;
-                    
+
                     //Save the slower of the 2
-                    if (leftSpeed > rightSpeed) leftSpeed = rightSpeed;                    
+                    if (leftSpeed > rightSpeed) leftSpeed = rightSpeed;
                 }
 
                 section[j].rightPoint = new vec3(cosHeading * (section[j].positionRight) + easting,
-                                    sinHeading * (section[j].positionRight) + northing,0);
+                                    sinHeading * (section[j].positionRight) + northing, 0);
 
                 //now we have left and right for this section
                 right = section[j].rightPoint - section[j].lastRightPoint;
@@ -1102,7 +1102,7 @@ namespace AgOpenGPS
 
                 double sped = 0;
                 //save the far left and right speed in m/sec averaged over 20%
-                if (j==0)
+                if (j == 0)
                 {
                     sped = (leftSpeed * 0.1);
                     if (sped < 0.1) sped = 0.1;
@@ -1127,7 +1127,7 @@ namespace AgOpenGPS
 
             //fill in tool positions
             section[tool.numOfSections].leftPoint = section[0].leftPoint;
-            section[tool.numOfSections].rightPoint = section[tool.numOfSections-1].rightPoint;
+            section[tool.numOfSections].rightPoint = section[tool.numOfSections - 1].rightPoint;
 
             //set the look ahead for hyd Lift in pixels per second
             vehicle.hydLiftLookAheadDistanceLeft = tool.toolFarLeftSpeed * vehicle.hydLiftLookAheadTime * 10;
@@ -1605,7 +1605,7 @@ namespace AgOpenGPS
             }
             //we are safely inside outer, outside inner boundaries
             return true;
-        }       
+        }
 
     }//end class
 }//end namespace

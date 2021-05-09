@@ -53,8 +53,6 @@ namespace AgOpenGPS
         public vec2 desPoint1 = new vec2(0.2, 0.15);
         public vec2 desPoint2 = new vec2(0.3, 0.3);
         public double desHeading = 0;
-        public vec2 desP1 = new vec2(0.0, 0.0);
-        public vec2 desP2 = new vec2(999997, 1.0);
         public string desName = "";
 
         public double pivotDistanceError, pivotDistanceErrorLast, pivotDerivative, pivotDerivativeSmoothed;
@@ -343,8 +341,8 @@ namespace AgOpenGPS
                 GL.LineWidth(lineWidth);
                 GL.Begin(PrimitiveType.Lines);
                 GL.Color3(0.95f, 0.20f, 0.950f);
-                GL.Vertex3(desP1.easting, desP1.northing, 0.0);
-                GL.Vertex3(desP2.easting, desP2.northing, 0.0);
+                GL.Vertex3(desPoint1.easting - Math.Sin(desHeading) * abLength, desPoint1.northing - Math.Cos(desHeading) * abLength, 0.0);
+                GL.Vertex3(desPoint2.easting + Math.Sin(desHeading) * abLength, desPoint2.northing + Math.Cos(desHeading) * abLength, 0.0);
                 GL.End();
 
                 GL.Color3(0.2f, 0.950f, 0.20f);
@@ -658,5 +656,4 @@ namespace AgOpenGPS
         public double heading = 0;
         public string Name = "aa";
     }
-
 }
